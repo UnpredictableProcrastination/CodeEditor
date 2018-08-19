@@ -2,7 +2,6 @@ package co.unpredictable_procrastination.codeeditor;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.Debug;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -14,20 +13,24 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
-import java.util.regex.*;
+
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.util.Arrays;
 
 
 public class MainActivity extends AppCompatActivity
 {
     private final static String FILENAME = "sample.txt"; // имя файла
-    private EditText mEditText;
-    private int a;
+    private EditText mainEditor;
+    private ArrayList<String> keywords;
 
     public void onCreate(Bundle savedInstanceState)
     {
@@ -35,12 +38,22 @@ public class MainActivity extends AppCompatActivity
 
         setContentView(R.layout.main);
 
-        mEditText = findViewById(R.id.editText);
+        final EditText numberBar = findViewById(R.id.lineNumbers);
+        numberBar.setKeyListener(null);
+
+        keywords = readKeywords();
+        if(null != keywords)
+        {
+            Toast.makeText(getApplicationContext(),
+                    keywords.get(0), Toast.LENGTH_LONG).show();
+        }
+
+        mainEditor = findViewById(R.id.mainEditor);
         final SpannableStringBuilder text = new SpannableStringBuilder("public static void main(){\n}");
         final ForegroundColorSpan style = new ForegroundColorSpan(Color.rgb(0, 0, 255));
         text.setSpan(style, 0, 20, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-        mEditText.setText(text);
-        mEditText.addTextChangedListener(new TextWatcher()
+        mainEditor.setText(text);
+        mainEditor.addTextChangedListener(new TextWatcher()
         {
             int start = 0, end = 0;
 
@@ -49,14 +62,25 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
- //               Toast.makeText(,Toast.LENGTH_SHORT).show();
+                if(numberBar.getLineCount() != mainEditor.getLineCount())
+                {
+                    StringBuilder newText = new StringBuilder();
+                    int i;
+                    for(i = 1; i < mainEditor.getLineCount(); i++)
+                    {
+                        newText.append(i);
+                        newText.append('\n');
+                    }
+                    newText.append(i);
+                    numberBar.setText(newText.toString());
+                }
             }
 
             public void setColorWord(){
-                final SpannableStringBuilder text = new SpannableStringBuilder(mEditText.getText());
+                final SpannableStringBuilder text = new SpannableStringBuilder(mainEditor.getText());
                 final ForegroundColorSpan style = new ForegroundColorSpan(Color.BLUE);
                 text.setSpan(style, start, end, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-                mEditText.setText(text);
+                mainEditor.setText(text);
             }
 
             @Override
@@ -65,9 +89,6 @@ public class MainActivity extends AppCompatActivity
 
             }
         });
-
-        EditText numberBar = findViewById(R.id.lineNumbers);
-        numberBar.setKeyListener(null);
     }
 
     @Override
@@ -117,7 +138,7 @@ public class MainActivity extends AppCompatActivity
                 }
 
                 inputStream.close();
-                mEditText.setText(builder.toString());
+                mainEditor.setText(builder.toString());
             }
         }
         catch (Throwable t)
@@ -134,7 +155,7 @@ public class MainActivity extends AppCompatActivity
         {
             OutputStream outputStream = openFileOutput(fileName, 0);
             OutputStreamWriter osw = new OutputStreamWriter(outputStream);
-            osw.write(mEditText.getText().toString());
+            osw.write(mainEditor.getText().toString());
             osw.close();
         }
         catch (Throwable t)
@@ -149,5 +170,29 @@ public class MainActivity extends AppCompatActivity
         Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
 
+    }
+
+    private void highlightKeywords()
+    {
+
+    }
+
+    private ArrayList<String> readKeywords()
+    {
+        ArrayList<String> keywords;
+        try(BufferedReader reader = new BufferedReader(
+                new InputStreamReader(getResources().openRawResource(R.raw.keywords))))
+        {
+            String[] data = reader.readLine().split(" ");
+            keywords = new ArrayList<>(Arrays.asList(data));
+            return keywords;
+        }
+        catch(IOException exc)
+        {
+            Toast.makeText(getApplicationContext(),
+                    "Exception: " + exc.toString(), Toast.LENGTH_LONG).show();
+        }
+
+        return null;
     }
 }
