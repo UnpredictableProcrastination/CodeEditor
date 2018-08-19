@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity
 {
     private final static String FILENAME = "sample.txt"; // имя файла
     private EditText mEditText;
-
+    private int a;
 
     public void onCreate(Bundle savedInstanceState)
     {
@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity
 //                text.setSpan(style, 0, 20, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
 //                mEditText.setText(text);
                 Toast toast = Toast.makeText(getApplicationContext(),
-                        start + " " + before + " " + count, Toast.LENGTH_SHORT);
+                    start + " " + before + " " + count, Toast.LENGTH_SHORT);
                 toast.show();
             }
 
