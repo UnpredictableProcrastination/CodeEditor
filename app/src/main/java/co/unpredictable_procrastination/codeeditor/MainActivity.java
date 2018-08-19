@@ -42,23 +42,21 @@ public class MainActivity extends AppCompatActivity
         mEditText.setText(text);
         mEditText.addTextChangedListener(new TextWatcher()
         {
+            int start = 0, end = 0;
 
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after)
-            {
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+ //               Toast.makeText(,Toast.LENGTH_SHORT).show();
             }
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count)
-            {
-//                final SpannableStringBuilder text = new SpannableStringBuilder(mEditText.getText());
-//                final ForegroundColorSpan style = new ForegroundColorSpan(Color.rgb(0, 100, 255));
-//                text.setSpan(style, 0, 20, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-//                mEditText.setText(text);
-                Toast toast = Toast.makeText(getApplicationContext(),
-                    start + " " + before + " " + count, Toast.LENGTH_SHORT);
-                toast.show();
+            public void setColorWord(){
+                final SpannableStringBuilder text = new SpannableStringBuilder(mEditText.getText());
+                final ForegroundColorSpan style = new ForegroundColorSpan(Color.BLUE);
+                text.setSpan(style, start, end, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+                mEditText.setText(text);
             }
 
             @Override
