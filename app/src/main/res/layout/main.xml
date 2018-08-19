@@ -22,8 +22,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0"
                 android:background="@android:color/white"
-                android:gravity="top|right"
-                android:inputType="none|textMultiLine"
+                android:gravity="top|end"
                 android:padding="5dp"
                 android:text="@string/lineNumbersText" />
 

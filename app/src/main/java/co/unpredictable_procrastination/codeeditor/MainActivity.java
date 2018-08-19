@@ -65,6 +65,9 @@ public class MainActivity extends AppCompatActivity
 
             }
         });
+
+        EditText numberBar = findViewById(R.id.lineNumbers);
+        numberBar.setKeyListener(null);
     }
 
     @Override
