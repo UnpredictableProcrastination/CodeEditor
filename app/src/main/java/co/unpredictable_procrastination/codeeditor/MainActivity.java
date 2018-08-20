@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                System.err.println("1"+"\n{\n\ttext: "+ s +
+                System.err.println("1"+"\n{\n\ttext: "+ "\t"+s +
                         "\n\tstart: "+start+
                         "\n\tafter: "+after+
                         "\n\tcount: "+count+"}");
