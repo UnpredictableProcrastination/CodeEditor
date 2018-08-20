@@ -7,12 +7,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.FileReader;
@@ -47,14 +49,23 @@ public class MainActivity extends AppCompatActivity
         keywords = readKeywords();
 
         mainEditor = findViewById(R.id.mainEditor);
-        //final SpannableStringBuilder text = new SpannableStringBuilder("public static void main(){\n}");
-        //final ForegroundColorSpan style = new ForegroundColorSpan(Color.rgb(0, 0, 255));
-        //text.setSpan(style, 0, 20, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-        //mainEditor.setText(text);
-        mainEditor.addTextChangedListener(new TextWatcher()
-        {
-            int start = 0, end = 0;
+//        SpannableStringBuilder mainBuilder = new SpannableStringBuilder();
+//        final ForegroundColorSpan style = new ForegroundColorSpan(Color.BLUE);
+//
+//        SpannableString first = new SpannableString("public abcd ");
+//        first.setSpan(new ForegroundColorSpan(Color.BLUE), 0, 6, 0);
+//
+//        SpannableString second = new SpannableString("static void main()");
+//        second.setSpan(new ForegroundColorSpan(Color.BLUE), 0, 11, 0);
+//
+//        mainBuilder.append(first);
+//        mainBuilder.append(second);
+//
+//        mainEditor.setText(mainBuilder, TextView.BufferType.SPANNABLE);
 
+        final TextWatcher mainWatcher;
+        mainWatcher = new TextWatcher()
+        {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 System.err.println("1"+"\n{\n\ttext: "+ s +
@@ -65,11 +76,12 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                int cursor = mainEditor.getSelectionStart();
                 updateNumBar();
 
                 int color = getResources().getColor(R.color.keyword);
-                SpannableStringBuilder text = new SpannableStringBuilder(s);
-                ForegroundColorSpan style = new ForegroundColorSpan(color);
+                SpannableStringBuilder builder = new SpannableStringBuilder(s);
+                //ForegroundColorSpan style = new ForegroundColorSpan(color);
 
                 for(String word : keywords)
                 {
@@ -77,11 +89,18 @@ public class MainActivity extends AppCompatActivity
                     while(m.find())
                     {
                         System.err.println("Found: " + m.group(0) + "\t" + m.start() + " " + m.end());
-                        text.setSpan(style, m.start(), m.end(), Spannable.SPAN_COMPOSING);
+                        SpannableString keyword = new SpannableString(m.group(0));
+                        keyword.setSpan(new ForegroundColorSpan(color), 0, keyword.length(), 0);
+
+                        //builder.replace(m.start(), m.end(), keyword);
+                        builder.delete(m.start(), m.end());
+                        builder.insert(m.start(), keyword);
                     }
                 }
-
-                mainEditor.setText(text);
+                mainEditor.removeTextChangedListener(this);
+                mainEditor.setText(builder, TextView.BufferType.SPANNABLE);
+                mainEditor.setSelection(cursor);
+                mainEditor.addTextChangedListener(this);
 
                 System.err.println("2" + "\n{\n\ttext: " + s +
                         "\n\tstart: " + start +
@@ -89,20 +108,14 @@ public class MainActivity extends AppCompatActivity
                         "\n\tcount: " + count + "}");
             }
 
-//            public void setColorWord()
-//            {
-//                final SpannableStringBuilder text = new SpannableStringBuilder(mainEditor.getText());
-//                final ForegroundColorSpan style = new ForegroundColorSpan(Color.BLUE);
-//                text.setSpan(style, start, end, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-//                mainEditor.setText(text);
-//            }
-
             @Override
             public void afterTextChanged(Editable s)
             {
                 System.err.println("3"+"\n"+s);
             }
-        });
+        };
+
+        mainEditor.addTextChangedListener(mainWatcher);
     }
 
     public void updateNumBar()
