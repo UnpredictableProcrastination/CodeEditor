@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity
 //                    newText.append(i);
 //                    numberBar.setText(newText.toString());
 //                }
-                System.err.println("2"+"\n{\n\ttext: "+ s +
+                System.err.println("2"+"\n{\n\ttext: "+ "\t"+s +
                         "\n\tstart: "+start+
                         "\n\tbefore: "+before+
                         "\n\tcount: "+count+"}");
