@@ -52,10 +52,10 @@ public class MainActivity extends AppCompatActivity
         }
 
         mainEditor = findViewById(R.id.mainEditor);
-        final SpannableStringBuilder text = new SpannableStringBuilder("public static void main(){\n}");
-        final ForegroundColorSpan style = new ForegroundColorSpan(Color.rgb(0, 0, 255));
-        text.setSpan(style, 0, 20, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-        mainEditor.setText(text);
+        //final SpannableStringBuilder text = new SpannableStringBuilder("public static void main(){\n}");
+        //final ForegroundColorSpan style = new ForegroundColorSpan(Color.rgb(0, 0, 255));
+        //text.setSpan(style, 0, 20, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+        //mainEditor.setText(text);
         mainEditor.addTextChangedListener(new TextWatcher()
         {
             int start = 0, end = 0;
@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity
                     while(m.find())
                     {
                         System.err.println("Found: " + m.group(0) + "\t" + m.start() + " " + m.end());
-
+                        text.setSpan(style, m.start(), m.end(), Spannable.SPAN_COMPOSING);
                     }
                 }
 
