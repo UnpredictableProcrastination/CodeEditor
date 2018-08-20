@@ -2,6 +2,7 @@ package co.unpredictable_procrastination.codeeditor;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -24,6 +25,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class MainActivity extends AppCompatActivity
@@ -59,7 +62,7 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                System.err.println("1"+"\n{\n\ttext: "+ "\t"+s +
+                System.err.println("1"+"\n{\n\ttext: "+ s +
                         "\n\tstart: "+start+
                         "\n\tafter: "+after+
                         "\n\tcount: "+count+"}");
@@ -67,30 +70,36 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                if(numberBar.getLineCount() != mainEditor.getLineCount())
-//                {
-//                    StringBuilder newText = new StringBuilder();
-//                    int i;
-//                    for(i = 1; i < mainEditor.getLineCount(); i++)
-//                    {
-//                        newText.append(i);
-//                        newText.append('\n');
-//                    }
-//                    newText.append(i);
-//                    numberBar.setText(newText.toString());
-//                }
-                System.err.println("2"+"\n{\n\ttext: "+ "\t"+s +
+                updateNumBar();
+
+                int color = getResources().getColor(R.color.keyword);
+                SpannableStringBuilder text = new SpannableStringBuilder(s);
+                ForegroundColorSpan style = new ForegroundColorSpan(color);
+
+                for(String word : keywords)
+                {
+                    Matcher m = Pattern.compile("(" + word + ")+").matcher(s);
+                    while(m.find())
+                    {
+                        System.err.println("Found: " + m.group(0) + "\t" + m.start() + " " + m.end());
+
+                    }
+                }
+
+
+                System.err.println("2"+"\n{\n\ttext: "+ s +
                         "\n\tstart: "+start+
                         "\n\tbefore: "+before+
                         "\n\tcount: "+count+"}");
             }
 
-            public void setColorWord(){
-                final SpannableStringBuilder text = new SpannableStringBuilder(mainEditor.getText());
-                final ForegroundColorSpan style = new ForegroundColorSpan(Color.BLUE);
-                text.setSpan(style, start, end, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-                mainEditor.setText(text);
-            }
+//            public void setColorWord()
+//            {
+//                final SpannableStringBuilder text = new SpannableStringBuilder(mainEditor.getText());
+//                final ForegroundColorSpan style = new ForegroundColorSpan(Color.BLUE);
+//                text.setSpan(style, start, end, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+//                mainEditor.setText(text);
+//            }
 
             @Override
             public void afterTextChanged(Editable s)
@@ -98,6 +107,24 @@ public class MainActivity extends AppCompatActivity
                 System.err.println("3"+"\n"+s);
             }
         });
+    }
+
+    public void updateNumBar()
+    {
+        EditText numberBar = findViewById(R.id.lineNumbers);
+
+        if(numberBar.getLineCount() != mainEditor.getLineCount())
+        {
+            StringBuilder newText = new StringBuilder();
+            int i;
+            for(i = 1; i < mainEditor.getLineCount(); i++)
+            {
+                newText.append(i);
+                newText.append('\n');
+            }
+            newText.append(i);
+            numberBar.setText(newText.toString());
+        }
     }
 
     @Override
