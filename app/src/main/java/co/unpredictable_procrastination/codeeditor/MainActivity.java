@@ -45,11 +45,6 @@ public class MainActivity extends AppCompatActivity
         numberBar.setKeyListener(null);
 
         keywords = readKeywords();
-        if(null != keywords)
-        {
-            Toast.makeText(getApplicationContext(),
-                    keywords.get(0), Toast.LENGTH_LONG).show();
-        }
 
         mainEditor = findViewById(R.id.mainEditor);
         //final SpannableStringBuilder text = new SpannableStringBuilder("public static void main(){\n}");
@@ -86,11 +81,12 @@ public class MainActivity extends AppCompatActivity
                     }
                 }
 
+                mainEditor.setText(text);
 
-                System.err.println("2"+"\n{\n\ttext: "+ s +
-                        "\n\tstart: "+start+
-                        "\n\tbefore: "+before+
-                        "\n\tcount: "+count+"}");
+                System.err.println("2" + "\n{\n\ttext: " + s +
+                        "\n\tstart: " + start +
+                        "\n\tbefore: " + before +
+                        "\n\tcount: " + count + "}");
             }
 
 //            public void setColorWord()
