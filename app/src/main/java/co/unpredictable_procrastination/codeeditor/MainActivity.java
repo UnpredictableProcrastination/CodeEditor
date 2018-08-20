@@ -58,22 +58,31 @@ public class MainActivity extends AppCompatActivity
             int start = 0, end = 0;
 
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                System.err.println("1"+"\n{\n\ttext: "+ s +
+                        "\n\tstart: "+start+
+                        "\n\tafter: "+after+
+                        "\n\tcount: "+count+"}");
+            }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(numberBar.getLineCount() != mainEditor.getLineCount())
-                {
-                    StringBuilder newText = new StringBuilder();
-                    int i;
-                    for(i = 1; i < mainEditor.getLineCount(); i++)
-                    {
-                        newText.append(i);
-                        newText.append('\n');
-                    }
-                    newText.append(i);
-                    numberBar.setText(newText.toString());
-                }
+//                if(numberBar.getLineCount() != mainEditor.getLineCount())
+//                {
+//                    StringBuilder newText = new StringBuilder();
+//                    int i;
+//                    for(i = 1; i < mainEditor.getLineCount(); i++)
+//                    {
+//                        newText.append(i);
+//                        newText.append('\n');
+//                    }
+//                    newText.append(i);
+//                    numberBar.setText(newText.toString());
+//                }
+                System.err.println("2"+"\n{\n\ttext: "+ s +
+                        "\n\tstart: "+start+
+                        "\n\tbefore: "+before+
+                        "\n\tcount: "+count+"}");
             }
 
             public void setColorWord(){
@@ -86,7 +95,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void afterTextChanged(Editable s)
             {
-
+                System.err.println("3"+"\n"+s);
             }
         });
     }
