@@ -54,7 +54,8 @@ public class MainActivity extends AppCompatActivity
         mainWatcher = new TextWatcher()
         {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            public void beforeTextChanged(CharSequence s, int start, int count, int after)
+            {
                 System.err.println("1"+"\n{\n\ttext: "+ s +
                         "\n\tstart: "+start+
                         "\n\tafter: "+after+
@@ -62,7 +63,8 @@ public class MainActivity extends AppCompatActivity
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            public void onTextChanged(CharSequence s, int start, int before, int count)
+            {
                 int cursor = mainEditor.getSelectionStart();
                 updateNumBar();
 
