@@ -49,19 +49,6 @@ public class MainActivity extends AppCompatActivity
         keywords = readKeywords();
 
         mainEditor = findViewById(R.id.mainEditor);
-//        SpannableStringBuilder mainBuilder = new SpannableStringBuilder();
-//        final ForegroundColorSpan style = new ForegroundColorSpan(Color.BLUE);
-//
-//        SpannableString first = new SpannableString("public abcd ");
-//        first.setSpan(new ForegroundColorSpan(Color.BLUE), 0, 6, 0);
-//
-//        SpannableString second = new SpannableString("static void main()");
-//        second.setSpan(new ForegroundColorSpan(Color.BLUE), 0, 11, 0);
-//
-//        mainBuilder.append(first);
-//        mainBuilder.append(second);
-//
-//        mainEditor.setText(mainBuilder, TextView.BufferType.SPANNABLE);
 
         final TextWatcher mainWatcher;
         mainWatcher = new TextWatcher()
