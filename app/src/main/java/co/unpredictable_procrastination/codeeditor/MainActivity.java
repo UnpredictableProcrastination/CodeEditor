@@ -35,7 +35,6 @@ public class MainActivity extends AppCompatActivity
 {
     private final static String FILENAME = "sample.txt"; // имя файла
     private EditText mainEditor;
-    private ArrayList<String> keywords;
 
     public void onCreate(Bundle savedInstanceState)
     {
@@ -45,8 +44,6 @@ public class MainActivity extends AppCompatActivity
 
         final EditText numberBar = findViewById(R.id.lineNumbers);
         numberBar.setKeyListener(null);
-
-        keywords = readKeywords();
 
         mainEditor = findViewById(R.id.mainEditor);
 //        SpannableStringBuilder mainBuilder = new SpannableStringBuilder();
@@ -79,40 +76,52 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 int cursor = mainEditor.getSelectionStart();
+                int counter = 0;
                 updateNumBar();
+
+                if(before>=1) counter = 0;
 
                 m = p.matcher(s);
                 int color = getResources().getColor(R.color.keyword);
                 SpannableStringBuilder builder = new SpannableStringBuilder(s);
                 //ForegroundColorSpan style = new ForegroundColorSpan(color);
 
-
-                while(m.find())
+                for (int i = 0;i<counter;i++)
                 {
-                    System.err.println("Found: " + m.group(0) + "\t" + m.start() + " " + m.end());
+                    System.err.println(m.group());
+                    m.find();
+                }
+
+                if(m.find())
+                {
                     SpannableString keyword = new SpannableString(m.group(0));
                     keyword.setSpan(new ForegroundColorSpan(color), 0, keyword.length(), 0);
 
                     //builder.replace(m.start(), m.end(), keyword);
                     builder.delete(m.start(), m.end());
                     builder.insert(m.start(), keyword);
+                    counter++;
+                    while (m.find())
+                    {
+
+                        keyword = new SpannableString(m.group(0));
+                        keyword.setSpan(new ForegroundColorSpan(color), 0, keyword.length(), 0);
+
+                        //builder.replace(m.start(), m.end(), keyword);
+                        builder.delete(m.start(), m.end());
+                        builder.insert(m.start(), keyword);
+                        counter++;
+                    }
+                    mainEditor.removeTextChangedListener(this);
+                    mainEditor.setText(builder, TextView.BufferType.SPANNABLE);
+                    mainEditor.setSelection(cursor);
+                    mainEditor.addTextChangedListener(this);
                 }
-
-                mainEditor.removeTextChangedListener(this);
-                mainEditor.setText(builder, TextView.BufferType.SPANNABLE);
-                mainEditor.setSelection(cursor);
-                mainEditor.addTextChangedListener(this);
-
-                System.err.println("2" + "\n{\n\ttext: " + s +
-                        "\n\tstart: " + start +
-                        "\n\tbefore: " + before +
-                        "\n\tcount: " + count + "}");
             }
 
             @Override
             public void afterTextChanged(Editable s)
             {
-                System.err.println("3"+"\n"+s);
             }
         };
 
@@ -216,30 +225,6 @@ public class MainActivity extends AppCompatActivity
         Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
 
-    }
-
-    private void highlightKeywords()
-    {
-
-    }
-
-    private ArrayList<String> readKeywords()
-    {
-        ArrayList<String> keywords;
-        try(BufferedReader reader = new BufferedReader(
-                new InputStreamReader(getResources().openRawResource(R.raw.keywords))))
-        {
-            String[] data = reader.readLine().split(" ");
-            keywords = new ArrayList<>(Arrays.asList(data));
-            return keywords;
-        }
-        catch(IOException exc)
-        {
-            Toast.makeText(getApplicationContext(),
-                    "Exception: " + exc.toString(), Toast.LENGTH_LONG).show();
-        }
-
-        return null;
     }
 
     private String makeKeywordPattern(){
