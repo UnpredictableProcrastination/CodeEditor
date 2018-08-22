@@ -49,68 +49,44 @@ public class MainActivity extends AppCompatActivity
         final int color = getResources().getColor(R.color.keyword);
 
         final TextWatcher mainWatcher;
+        final Pattern p = Pattern.compile(makeKeywordPattern());
+
         mainWatcher = new TextWatcher()
         {
-            Pattern p = Pattern.compile(makeKeywordPattern());
             Matcher m;
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                System.err.println("1"+"\n{\n\ttext: "+ s +
-                        "\n\tstart: "+start+
-                        "\n\tafter: "+after+
-                        "\n\tcount: "+count+"}");
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                final long time1 = System.nanoTime();
+
                 int cursor = mainEditor.getSelectionStart();
                 updateNumBar();
-                final long time2 = System.nanoTime();
+
                 m = p.matcher(s);
                 SpannableStringBuilder builder = new SpannableStringBuilder(s);
-                final long time3 = System.nanoTime();
+                boolean found = false;
                 while(m.find())
                 {
+                    found = true;
                     System.err.println("Found: " + m.group(0) + "\t" + m.start() + " " + m.end());
                     SpannableString keyword = new SpannableString(m.group(0));
                     keyword.setSpan(new ForegroundColorSpan(color), 0, keyword.length(), 0);
 
                     builder.replace(m.start(), m.end(), keyword);
-//                    builder.delete(m.start(), m.end());
-//                    builder.insert(m.start(), keyword);
                 }
-                final long time4 = System.nanoTime();
 
-                mainEditor.removeTextChangedListener(this);
-                mainEditor.setText(builder, TextView.BufferType.SPANNABLE);
-                mainEditor.setSelection(cursor);
-                final long time5 = System.nanoTime();
-                mainEditor.addTextChangedListener(this);
-                final long time6 = System.nanoTime();
-                System.err.println("2" + "\n{\n\ttext: " + s +
-                        "\n\tstart: " + start +
-                        "\n\tbefore: " + before +
-                        "\n\tcount: " + count + "}");
-                final long time7 = System.nanoTime();
-
-                System.err.println("\n\n\n" +
-                        "text: [" + s + "]\n" +
-                        "[time deltas by nanoseconds]\n" +
-                        "delta1-2: " + (time2 - time1) + '\n' +
-                        "delta2-3: " + (time3 - time2) + '\n' +
-                        "delta3-4: " + (time4 - time3) + '\n' +
-                        "delta4-5: " + (time5 - time4) + '\n' +
-                        "delta5-6: " + (time6 - time5) + '\n' +
-                        "delta6-7: " + (time7 - time6) + '\n' +
-                        "\n\n\n");
+                if(found)
+                {
+                    mainEditor.removeTextChangedListener(this);
+                    mainEditor.setText(builder, TextView.BufferType.SPANNABLE);
+                    mainEditor.setSelection(cursor);
+                    mainEditor.addTextChangedListener(this);
+                }
             }
 
             @Override
-            public void afterTextChanged(Editable s)
-            {
-                System.err.println("3"+"\n"+s);
-            }
+            public void afterTextChanged(Editable s) { }
         };
 
         mainEditor.addTextChangedListener(mainWatcher);
