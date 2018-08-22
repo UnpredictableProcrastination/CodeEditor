@@ -35,7 +35,6 @@ public class MainActivity extends AppCompatActivity
 {
     private final static String FILENAME = "sample.txt"; // имя файла
     private EditText mainEditor;
-    private ArrayList<String> keywords;
 
     public void onCreate(Bundle savedInstanceState)
     {
@@ -46,22 +45,8 @@ public class MainActivity extends AppCompatActivity
         final EditText numberBar = findViewById(R.id.lineNumbers);
         numberBar.setKeyListener(null);
 
-        keywords = readKeywords();
-
         mainEditor = findViewById(R.id.mainEditor);
-//        SpannableStringBuilder mainBuilder = new SpannableStringBuilder();
-//        final ForegroundColorSpan style = new ForegroundColorSpan(Color.BLUE);
-//
-//        SpannableString first = new SpannableString("public abcd ");
-//        first.setSpan(new ForegroundColorSpan(Color.BLUE), 0, 6, 0);
-//
-//        SpannableString second = new SpannableString("static void main()");
-//        second.setSpan(new ForegroundColorSpan(Color.BLUE), 0, 11, 0);
-//
-//        mainBuilder.append(first);
-//        mainBuilder.append(second);
-//
-//        mainEditor.setText(mainBuilder, TextView.BufferType.SPANNABLE);
+        final int color = getResources().getColor(R.color.keyword);
 
         final TextWatcher mainWatcher;
         mainWatcher = new TextWatcher()
@@ -78,35 +63,47 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                final long time1 = System.nanoTime();
                 int cursor = mainEditor.getSelectionStart();
                 updateNumBar();
-
+                final long time2 = System.nanoTime();
                 m = p.matcher(s);
-                int color = getResources().getColor(R.color.keyword);
                 SpannableStringBuilder builder = new SpannableStringBuilder(s);
-                //ForegroundColorSpan style = new ForegroundColorSpan(color);
-
-
+                final long time3 = System.nanoTime();
                 while(m.find())
                 {
                     System.err.println("Found: " + m.group(0) + "\t" + m.start() + " " + m.end());
                     SpannableString keyword = new SpannableString(m.group(0));
                     keyword.setSpan(new ForegroundColorSpan(color), 0, keyword.length(), 0);
 
-                    //builder.replace(m.start(), m.end(), keyword);
-                    builder.delete(m.start(), m.end());
-                    builder.insert(m.start(), keyword);
+                    builder.replace(m.start(), m.end(), keyword);
+//                    builder.delete(m.start(), m.end());
+//                    builder.insert(m.start(), keyword);
                 }
+                final long time4 = System.nanoTime();
 
                 mainEditor.removeTextChangedListener(this);
                 mainEditor.setText(builder, TextView.BufferType.SPANNABLE);
                 mainEditor.setSelection(cursor);
+                final long time5 = System.nanoTime();
                 mainEditor.addTextChangedListener(this);
-
+                final long time6 = System.nanoTime();
                 System.err.println("2" + "\n{\n\ttext: " + s +
                         "\n\tstart: " + start +
                         "\n\tbefore: " + before +
                         "\n\tcount: " + count + "}");
+                final long time7 = System.nanoTime();
+
+                System.err.println("\n\n\n" +
+                        "text: [" + s + "]\n" +
+                        "[time deltas by nanoseconds]\n" +
+                        "delta1-2: " + (time2 - time1) + '\n' +
+                        "delta2-3: " + (time3 - time2) + '\n' +
+                        "delta3-4: " + (time4 - time3) + '\n' +
+                        "delta4-5: " + (time5 - time4) + '\n' +
+                        "delta5-6: " + (time6 - time5) + '\n' +
+                        "delta6-7: " + (time7 - time6) + '\n' +
+                        "\n\n\n");
             }
 
             @Override
@@ -216,30 +213,6 @@ public class MainActivity extends AppCompatActivity
         Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
 
-    }
-
-    private void highlightKeywords()
-    {
-
-    }
-
-    private ArrayList<String> readKeywords()
-    {
-        ArrayList<String> keywords;
-        try(BufferedReader reader = new BufferedReader(
-                new InputStreamReader(getResources().openRawResource(R.raw.keywords))))
-        {
-            String[] data = reader.readLine().split(" ");
-            keywords = new ArrayList<>(Arrays.asList(data));
-            return keywords;
-        }
-        catch(IOException exc)
-        {
-            Toast.makeText(getApplicationContext(),
-                    "Exception: " + exc.toString(), Toast.LENGTH_LONG).show();
-        }
-
-        return null;
     }
 
     private String makeKeywordPattern(){
