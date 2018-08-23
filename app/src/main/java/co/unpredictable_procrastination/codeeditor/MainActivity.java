@@ -11,6 +11,7 @@ import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -66,18 +67,30 @@ public class MainActivity extends AppCompatActivity
                 m = p.matcher(s);
                 SpannableStringBuilder builder = new SpannableStringBuilder(s);
                 boolean found = false;
+
                 while(m.find())
                 {
                     found = true;
-                    System.err.println("Found: " + m.group(0) + "\t" + m.start() + " " + m.end());
-                    SpannableString keyword = new SpannableString(m.group(0));
-                    keyword.setSpan(new ForegroundColorSpan(color), 0, keyword.length(), 0);
+                    for(ForegroundColorSpan o:builder.getSpans(m.start(),m.end()-1,ForegroundColorSpan.class)){
+                        Log.i("Help",Boolean.toString(o.getForegroundColor()==color) + " "
+                                + builder.getSpans(m.start(),m.end(),ForegroundColorSpan.class).length);
+                    }
+                    if (true)
+                    {
+                        SpannableString keyword = new SpannableString(m.group(0));
+                        keyword.setSpan(new ForegroundColorSpan(color), 0, keyword.length(), 0);
 
-                    builder.replace(m.start(), m.end(), keyword);
+                        builder.replace(m.start(), m.end(), keyword);
+                    }
+                    else
+                    {
+                        found = false;
+                    }
                 }
 
                 if(found)
                 {
+
                     mainEditor.removeTextChangedListener(this);
                     mainEditor.setText(builder, TextView.BufferType.SPANNABLE);
                     mainEditor.setSelection(cursor);
