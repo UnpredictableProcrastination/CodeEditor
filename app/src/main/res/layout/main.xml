@@ -38,7 +38,7 @@
                 android:width="0dp"
                 android:background="@android:color/white"
                 android:gravity="top"
-                android:inputType="textMultiLine"
+                android:inputType="textMultiLine|textNoSuggestions"
                 android:scrollHorizontally="true"
                 android:selectAllOnFocus="false"
                 android:singleLine="true" />
