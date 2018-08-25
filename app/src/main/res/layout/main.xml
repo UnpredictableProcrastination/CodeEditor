@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:weightSum="0">
 
     <HorizontalScrollView
         android:layout_width="match_parent"
@@ -14,7 +15,8 @@
             android:layout_height="match_parent"
             android:background="@android:color/black"
             android:orientation="horizontal"
-            android:visibility="visible">
+            android:visibility="visible"
+            android:weightSum="1">
 
             <EditText
                 android:id="@+id/lineNumbers"
@@ -33,9 +35,10 @@
                 android:layout_height="match_parent"
                 android:layout_marginStart="2dp"
                 android:layout_weight="1"
+                android:width="0dp"
                 android:background="@android:color/white"
                 android:gravity="top"
-                android:inputType="textMultiLine"
+                android:inputType="textMultiLine|textNoSuggestions"
                 android:scrollHorizontally="true"
                 android:selectAllOnFocus="false"
                 android:singleLine="true" />
