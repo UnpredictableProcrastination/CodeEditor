@@ -371,12 +371,12 @@ public class MainActivity extends AppCompatActivity
             String[] data = reader.readLine().split(" ");
             pattern.append("\\b(")
                     .append(data[0]);
-                    //.append(")");
+            //.append(")");
             for (int i = 1;i<data.length;i++)
             {
                 pattern.append("|")
                         .append(data[i]);
-                        //.append(")");
+                //.append(")");
             }
             pattern.append(")\\b");
             return pattern.toString();
@@ -388,6 +388,4 @@ public class MainActivity extends AppCompatActivity
         }
         return "";
     }
-
-
 }
