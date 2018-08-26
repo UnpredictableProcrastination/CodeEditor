@@ -2,48 +2,23 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:weightSum="0">
 
-    <HorizontalScrollView
+    <android.support.design.widget.TabLayout
+        android:id="@+id/sliding_tabs"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:layout_height="wrap_content"
+        app:tabMode="scrollable"
+        />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@android:color/black"
-            android:orientation="horizontal"
-            android:visibility="visible"
-            android:weightSum="1">
-
-            <EditText
-                android:id="@+id/lineNumbers"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="0"
-                android:background="@android:color/white"
-                android:gravity="top|end"
-                android:inputType="none"
-                android:padding="5dp"
-                android:text="@string/lineNumbersText" />
-
-            <EditText
-                android:id="@+id/mainEditor"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginStart="2dp"
-                android:layout_weight="1"
-                android:width="0dp"
-                android:background="@android:color/white"
-                android:gravity="top"
-                android:inputType="textMultiLine|textNoSuggestions"
-                android:scrollHorizontally="true"
-                android:selectAllOnFocus="false"
-                android:singleLine="true" />
-
-        </LinearLayout>
-    </HorizontalScrollView>
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="0px"
+        android:layout_weight="1"
+        android:background="@android:color/white"
+        />
 
 </LinearLayout>
