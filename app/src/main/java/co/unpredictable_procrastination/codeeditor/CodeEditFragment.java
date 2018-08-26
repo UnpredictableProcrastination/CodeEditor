@@ -300,6 +300,7 @@ public class CodeEditFragment extends Fragment
         return "";
     }
 
+    // TODO: look at existing numbers before addiction
     public void updateNumBar()
     {
         if(numBar.getLineCount() != codeEdit.getLineCount())
