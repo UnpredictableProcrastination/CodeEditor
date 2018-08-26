@@ -7,8 +7,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
-
 
 public class MainActivity extends AppCompatActivity
 {
@@ -23,7 +21,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.main);
 
         // Получаем ViewPager
-        ViewPager viewPager = findViewById(R.id.viewpager);
+        CustomViewPager viewPager = findViewById(R.id.viewpager);
         // устанавливаем в него адаптер
         viewPager.setAdapter(
                 new CodeEditFragmentPagerAdapter(
@@ -31,7 +29,6 @@ public class MainActivity extends AppCompatActivity
                         MainActivity.this
                 )
         );
-        viewPager.setOnTouchListener(null);
 
         // Передаём ViewPager в TabLayout
         TabLayout tabLayout = findViewById(R.id.sliding_tabs);
