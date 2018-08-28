@@ -18,29 +18,34 @@
         android:hint="@string/numBarHint"/>
 
     <HorizontalScrollView
+        android:id="@+id/editorHorizontalScroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:background="@android:color/black"
-        android:fillViewport="true"
-        android:paddingEnd="0dp"
-        android:paddingStart="2dp">
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:background="@android:color/white"
-            android:orientation="vertical">
+            android:background="@android:color/black"
+            android:isScrollContainer="true"
+            android:orientation="horizontal"
+            android:visibility="visible"
+            android:weightSum="1">
 
             <EditText
                 android:id="@+id/mainEditor"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:width="0dp"
+                android:layout_marginStart="2dp"
+                android:layout_weight="1"
                 android:background="@android:color/white"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:gravity="top"
                 android:hint="@string/codeEditTextHint"
                 android:inputType="textMultiLine|textNoSuggestions"
+                android:marqueeRepeatLimit="marquee_forever"
                 android:scrollHorizontally="true"
                 android:selectAllOnFocus="false"
                 android:singleLine="true" />

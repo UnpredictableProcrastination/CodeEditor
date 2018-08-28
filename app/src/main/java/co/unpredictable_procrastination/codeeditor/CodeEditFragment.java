@@ -18,7 +18,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -74,6 +76,11 @@ public class CodeEditFragment extends Fragment
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    public void setText(String text)
+    {
+        codeEdit.setText(text);
     }
 
     public void initTextWatcher()
@@ -313,6 +320,35 @@ public class CodeEditFragment extends Fragment
             }
             newText.append(i);
             numBar.setText(newText.toString());
+        }
+    }
+
+    public void openFile(String fileName)
+    {
+        try
+        {
+            InputStream inputStream = root.getContext().openFileInput(fileName);
+
+
+            if (inputStream != null)
+            {
+                InputStreamReader isr = new InputStreamReader(inputStream);
+                BufferedReader reader = new BufferedReader(isr);
+                String line;
+                StringBuilder builder = new StringBuilder();
+
+                while ((line = reader.readLine()) != null)
+                {
+                    builder.append(line).append("\n");
+                }
+                inputStream.close();
+                setText(builder.toString());
+            }
+        }
+        catch (Throwable t)
+        {
+            Toast.makeText(root.getContext(),
+                    "Exception: " + t.toString(), Toast.LENGTH_LONG).show();
         }
     }
 }

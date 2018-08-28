@@ -7,10 +7,17 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.design.widget.TabLayout;
+import android.widget.Toast;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 public class MainActivity extends AppCompatActivity
 {
     //private final static String FILENAME = "sample.txt"; // имя файла
+
+    CodeEditFragmentPagerAdapter viewPagerAdapter;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -22,17 +29,20 @@ public class MainActivity extends AppCompatActivity
 
         // Получаем ViewPager
         CustomViewPager viewPager = findViewById(R.id.viewpager);
-        // устанавливаем в него адаптер
-        viewPager.setAdapter(
-                new CodeEditFragmentPagerAdapter(
-                        getSupportFragmentManager(),
-                        MainActivity.this
-                )
+
+        viewPagerAdapter = new CodeEditFragmentPagerAdapter(
+                getSupportFragmentManager(),
+                MainActivity.this,
+                viewPager
         );
+
+        // устанавливаем в него адаптер
+        viewPager.setAdapter(viewPagerAdapter);
 
         // Передаём ViewPager в TabLayout
         TabLayout tabLayout = findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
+
     }
 
     @Override
@@ -49,7 +59,7 @@ public class MainActivity extends AppCompatActivity
         switch (item.getItemId())
         {
             case R.id.action_open:
-                //openFile(FILENAME);
+                openFile();
                 return true;
             case R.id.action_save:
                 //saveFile(FILENAME);
@@ -57,40 +67,25 @@ public class MainActivity extends AppCompatActivity
             case R.id.action_settings:
                 openSettings();
                 return true;
+            case R.id.action_new_window:
+                openNewWindow();
+                return true;
             default:
                 return true;
         }
     }
 
-//    // Метод для открытия файла
-//    private void openFile(String fileName)
-//    {
-//        try
-//        {
-//            InputStream inputStream = openFileInput(fileName);
-//
-//            if (inputStream != null)
-//            {
-//                InputStreamReader isr = new InputStreamReader(inputStream);
-//                BufferedReader reader = new BufferedReader(isr);
-//                String line;
-//                StringBuilder builder = new StringBuilder();
-//
-//                while ((line = reader.readLine()) != null)
-//                {
-//                    builder.append(line).append("\n");
-//                }
-//
-//                inputStream.close();
-//                mainEditor.setText(builder.toString());
-//            }
-//        }
-//        catch (Throwable t)
-//        {
-//            Toast.makeText(getApplicationContext(),
-//                    "Exception: " + t.toString(), Toast.LENGTH_LONG).show();
-//        }
-//    }
+    private void openNewWindow()
+    {
+        viewPagerAdapter.newWindow();
+    }
+
+    // Метод для открытия файла
+    private void openFile()
+    {
+        String fileName = "";
+        viewPagerAdapter.newWindow(fileName);
+    }
 //
 //    // Метод для сохранения файла
 //    private void saveFile(String fileName)
