@@ -1,7 +1,11 @@
 package co.unpredictable_procrastination.codeeditor;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -83,8 +87,32 @@ public class MainActivity extends AppCompatActivity
     // Метод для открытия файла
     private void openFile()
     {
-        String fileName = "";
-        viewPagerAdapter.newWindow(fileName);
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED)
+        {
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                Toast.makeText(this, "CANNOT READ", Toast.LENGTH_SHORT).show();
+                requestPermissions(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+
+            }
+            return;
+        }
+
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED)
+        {
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                Toast.makeText(this, "CANNOT WRITE", Toast.LENGTH_SHORT).show();
+                requestPermissions(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+
+            }
+            return;
+        }
+
+        OpenFileDialog fileDialog = new OpenFileDialog(this, viewPagerAdapter);
+        fileDialog.show();
     }
 //
 //    // Метод для сохранения файла
