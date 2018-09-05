@@ -111,7 +111,15 @@ public class MainActivity extends AppCompatActivity
             return;
         }
 
-        OpenFileDialog fileDialog = new OpenFileDialog(this, viewPagerAdapter);
+        OpenFileDialog fileDialog = new OpenFileDialog(this, viewPagerAdapter)
+                .setOpenDialogListener(new OpenFileDialog.OpenDialogListener() {
+                    @Override
+                    public void OnSelectedFile(String fileName)
+                    {
+                        Toast.makeText(getApplicationContext(), fileName, Toast.LENGTH_SHORT).show();
+                        viewPagerAdapter.newWindow(fileName);
+                    }
+                });
         fileDialog.show();
     }
 //

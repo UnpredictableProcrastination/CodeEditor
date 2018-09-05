@@ -20,7 +20,7 @@ public class CodeEditFragmentPagerAdapter extends FragmentPagerAdapter {
         this.vPager = vPager;
         fragments = new ArrayList<>();
         tabTitles = new ArrayList<>();
-        newWindow();
+        //newWindow("whoami");
         this.context = context;
     }
 
@@ -41,8 +41,9 @@ public class CodeEditFragmentPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         int count = fragments.size();
-        if (position <= count) {
-            fragments.set(position, CodeEditFragment.newInstance(""));
+        if (position >= count) {
+            //fragments.set(position, CodeEditFragment.newInstance());
+            position = count - 1;
         }
         return fragments.get(position);
     }
@@ -54,12 +55,12 @@ public class CodeEditFragmentPagerAdapter extends FragmentPagerAdapter {
     }
 
     public void newWindow() {
-        this.newWindow("");
+        this.newWindow(null);
     }
 
     public void newWindow(String path) {
         fragments.add(CodeEditFragment.newInstance(path));
-        tabTitles.add("Tab" + fragments.size());
+        tabTitles.add("Tab" + fragments.size() + path);
         notifyDataSetChanged();
         vPager.setCurrentItem(fragments.size() - 1);
     }

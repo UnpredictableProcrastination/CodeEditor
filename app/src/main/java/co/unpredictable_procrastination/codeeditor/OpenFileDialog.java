@@ -2,6 +2,7 @@ package co.unpredictable_procrastination.codeeditor;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Paint;
 import android.graphics.Point;
@@ -32,10 +33,17 @@ import java.util.List;
 
 public class OpenFileDialog extends AlertDialog.Builder
 {
+    public interface OpenDialogListener
+    {
+        public void OnSelectedFile(String fileName);
+    }
+
+    private OpenDialogListener listener;
     private TextView title;
     private String currentPath = Environment.getExternalStorageDirectory().getPath();
     private List<File> files = new ArrayList<>();
     private CodeEditFragmentPagerAdapter viewPagerAdapter;
+    private int selectedIndex = -1;
 
     public OpenFileDialog(Context context, CodeEditFragmentPagerAdapter adapter)
     {
@@ -44,12 +52,21 @@ public class OpenFileDialog extends AlertDialog.Builder
         LinearLayout layout = createMainLayout(context);
         viewPagerAdapter = adapter;
         files.addAll(getFiles(currentPath));
-        ListView listView = createListView(context);
+        final ListView listView = createListView(context);
+        listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         listView.setAdapter(new FileAdapter(context, files));
         layout.addView(listView);
         setView(layout)
                 .setCustomTitle(title)
-                .setPositiveButton(android.R.string.ok, null)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(selectedIndex > -1 && listener != null)
+                        {
+                            listener.OnSelectedFile(listView.getItemAtPosition(selectedIndex).toString());
+                        }
+                    }
+                })
                 .setNegativeButton(android.R.string.cancel, null);
                 //.setAdapter(new FileAdapter(context, getFiles(currentPath)), null);
     }
@@ -85,6 +102,7 @@ public class OpenFileDialog extends AlertDialog.Builder
     {
         try{
             files.clear();
+            selectedIndex = -1;
             File parent = new File(currentPath).getParentFile();
             if(parent != null && parent.canRead())
             {
@@ -100,6 +118,12 @@ public class OpenFileDialog extends AlertDialog.Builder
             adapter.notifyDataSetChanged();
             changeTitle();
         }
+    }
+
+    public OpenFileDialog setOpenDialogListener(OpenDialogListener listener)
+    {
+        this.listener = listener;
+        return this;
     }
 
     private ListView createListView(Context context)
@@ -138,7 +162,11 @@ public class OpenFileDialog extends AlertDialog.Builder
                 }
                 else
                 {
-                    //viewPagerAdapter.newWindow(file.getName());
+                    if (index != selectedIndex)
+                        selectedIndex = index;
+                    else
+                        selectedIndex = -1;
+                    adapter.notifyDataSetChanged();
                 }
             }
         });

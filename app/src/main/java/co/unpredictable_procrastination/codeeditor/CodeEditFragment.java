@@ -18,7 +18,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -69,6 +71,7 @@ public class CodeEditFragment extends Fragment
 
         codeEdit = root.findViewById(R.id.mainEditor);
         initTextWatcher();
+        openFile(path);
         return root;
     }
 
@@ -78,10 +81,6 @@ public class CodeEditFragment extends Fragment
         super.onViewCreated(view, savedInstanceState);
     }
 
-    public void setText(String text)
-    {
-        codeEdit.setText(text);
-    }
 
     public void initTextWatcher()
     {
@@ -162,7 +161,8 @@ public class CodeEditFragment extends Fragment
                                     );
 
                             // Он нам больше не нужен, сносим к чертям!
-                            if (spans.length > 0) {
+                            if (spans.length > 0)
+                            {
                                 builder.removeSpan(spans[0]);
                             }
                         }
@@ -327,13 +327,12 @@ public class CodeEditFragment extends Fragment
     {
         try
         {
-            InputStream inputStream = root.getContext().openFileInput(fileName);
+            File file = new File(fileName);
 
 
-            if (inputStream != null)
+            if (file != null)
             {
-                InputStreamReader isr = new InputStreamReader(inputStream);
-                BufferedReader reader = new BufferedReader(isr);
+                BufferedReader reader = new BufferedReader(new FileReader(file));
                 String line;
                 StringBuilder builder = new StringBuilder();
 
@@ -341,14 +340,15 @@ public class CodeEditFragment extends Fragment
                 {
                     builder.append(line).append("\n");
                 }
-                inputStream.close();
-                setText(builder.toString());
+                reader.close();
+                codeEdit.setText(builder.toString());
             }
         }
         catch (Throwable t)
         {
             Toast.makeText(root.getContext(),
                     "Exception: " + t.toString(), Toast.LENGTH_LONG).show();
+            Toast.makeText(root.getContext(), fileName, Toast.LENGTH_LONG).show();
         }
     }
 }
