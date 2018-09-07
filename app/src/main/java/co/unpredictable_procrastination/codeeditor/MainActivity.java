@@ -5,7 +5,9 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -119,7 +121,10 @@ public class MainActivity extends AppCompatActivity
                         Toast.makeText(getApplicationContext(), fileName, Toast.LENGTH_SHORT).show();
                         viewPagerAdapter.newWindow(fileName);
                     }
-                });
+                })
+                .setFilter(".*\\.txt")
+                .setFolderIcon(getDrawable(R.drawable.ic_folder))
+                .setFileIcon(getDrawable(R.drawable.ic_file));
         fileDialog.show();
     }
 //
